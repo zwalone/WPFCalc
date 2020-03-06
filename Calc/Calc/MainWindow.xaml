@@ -5,8 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calc"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Calc" Height="400" Width="500">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <!--Buttons number-->
+        <Button x:Name="btn_7" Grid.Row="2" Grid.Column="0">7</Button>
+        <Button x:Name="btn_8" Grid.Row="2" Grid.Column="1">8</Button>
+        <Button x:Name="btn_9" Grid.Row="2" Grid.Column="2">9</Button>
+
+        <Button x:Name="btn_6" Grid.Row="3" Grid.Column="0">6</Button>
+        <Button x:Name="btn_5" Grid.Row="3" Grid.Column="1">5</Button>
+        <Button x:Name="btn_4" Grid.Row="3" Grid.Column="2">4</Button>
+
+        <Button x:Name="btn_3" Grid.Row="4" Grid.Column="0">3</Button>
+        <Button x:Name="btn_2" Grid.Row="4" Grid.Column="1">2</Button>
+        <Button x:Name="btn_1" Grid.Row="4" Grid.Column="2">1</Button>
+        <Button x:Name="btn_0" Grid.Row="5" Grid.Column="1">0</Button>
+        
+        <!--Buttons clear-->
+        <Button x:Name="btn_ClearEntry" Grid.Row="1" Grid.Column="0">CE</Button>
+        <Button x:Name="btn_Clear" Grid.Row="1" Grid.Column="1">C</Button>
+        <Button x:Name="btn_Back" Grid.Row="1" Grid.Column="2">Back</Button>
+        
+        <!--Buttons plus/minus , dot-->
+        <Button x:Name="btn_sign" Grid.Row="5" Grid.Column="0">+/-</Button>
+        <Button x:Name="btn_dot" Grid.Row="5" Grid.Column="2">,</Button>
+        
+        <!--TextBoxes-->
+        <TextBox x:Name="tbx_dysplay" IsReadOnly="True" Text="0" TextAlignment="Right" VerticalAlignment="Center" FontSize="30" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="tbx_history" Margin="5 , 0 ,5 ,5" IsReadOnly="True" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="5" FontSize="20" VerticalContentAlignment="Top" HorizontalContentAlignment="Center"/>
+
+        <!---->
+        <Label x:Name="lb_history" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" Content="History" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="30"/>
         
     </Grid>
 </Window>
