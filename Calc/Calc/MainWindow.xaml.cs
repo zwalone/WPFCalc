@@ -21,8 +21,8 @@ namespace Calc
     /// </summary>
     public partial class MainWindow : Window
     {
-        private double num1;
-        private double num2;
+        private double num1 = 0;
+        private double num2 = 0;
         private string lenquage;
         private StringBuilder displayString;
 
@@ -124,17 +124,47 @@ namespace Calc
         #region Buttons Clear
         private void Btn_ClearEntry_Click(object sender, RoutedEventArgs e)
         {
-
+            displayString.Clear();
+            displayString.Append("0");
+            tbx_dysplay.Text = displayString.ToString();
         }
 
         private void Btn_Clear_Click(object sender, RoutedEventArgs e)
         {
-
+            displayString.Clear();
+            displayString.Append("0");
+            tbx_dysplay.Text = displayString.ToString();
+            num1 = 0;
+            num2 = 0;
         }
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)
         {
-
+            if(displayString[0] == '-')
+            {
+                if(displayString.Length == 2)
+                {
+                    displayString.Clear();
+                    displayString.Append("0");
+                }
+                else
+                {
+                    displayString.Remove(displayString.Length - 1, 1);
+                }
+            }
+            else
+            {
+                if(displayString.Length > 1)
+                {
+                    displayString.Remove(displayString.Length - 1, 1);
+                }
+                else
+                {
+                    displayString.Clear();
+                    displayString.Append("0");
+                }
+            }
+            tbx_dysplay.Text = displayString.ToString();
         }
 
         #endregion
@@ -170,12 +200,40 @@ namespace Calc
         #region Buttons +- , 
         private void Btn_sign_Click(object sender, RoutedEventArgs e)
         {
+            if(displayString.ToString() == "0")
+            {
 
+            }
+            else if(displayString[0] != '-')
+            {
+                displayString.Insert(0,'-');
+            }
+            else if(displayString[0] == '-')
+            {
+                displayString.Remove(0, 1);
+            }
+            tbx_dysplay.Text = displayString.ToString();
         }
 
         private void Btn_dot_Click(object sender, RoutedEventArgs e)
         {
+            if (displayString.ToString().Contains(',') || displayString.ToString().Contains(','))
+            {
 
+            }
+            else
+            {
+                // pl add ,
+                if(lenquage == "pl-PL")
+                {
+                    displayString.Append(',');
+                }
+                else
+                {
+                    displayString.Append('.');
+                }
+            }
+            tbx_dysplay.Text = displayString.ToString();
         }
         #endregion
     }
