@@ -21,8 +21,8 @@ namespace Calc
     /// </summary>
     public partial class MainWindow : Window
     {
-        private double num1 = 0;
-        private double num2 = 0;
+        private Stack<double> num;
+        private char operations = ' ';
         private string lenquage;
         private StringBuilder displayString;
 
@@ -51,9 +51,32 @@ namespace Calc
             tbx_dysplay.Text = displayString.ToString();
         }
 
+        private void Operations(char op)
+        {
+            if (num == null || num.Count <2)
+            {
+                try
+                {
+                    if(lenquage == "pl-PL")
+                    {
+                        num.Push(Convert.ToDouble(displayString.ToString().Replace(',', '.')));
+                    }
+                    else
+                    {
+                        num.Push(Convert.ToDouble(displayString.ToString()));
+                    }
+                    operations = op;
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
         private void ChangeValue(string s)
         {
-            if (displayString.Length < 16)
+            if (displayString.Length < 17)
             {
                 if (displayString.ToString() == "0")
                 {
@@ -66,6 +89,11 @@ namespace Calc
                 }
                 tbx_dysplay.Text = displayString.ToString();
             }
+        }
+
+        private void ToNumbers()
+        {
+
         }
 
         #region Buttons 0-9
@@ -134,8 +162,7 @@ namespace Calc
             displayString.Clear();
             displayString.Append("0");
             tbx_dysplay.Text = displayString.ToString();
-            num1 = 0;
-            num2 = 0;
+            num.Clear();
         }
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)
@@ -169,25 +196,25 @@ namespace Calc
 
         #endregion
 
-        #region Buttons + - / * +
+        #region Buttons operations
         private void Btn_div_Click(object sender, RoutedEventArgs e)
         {
-
+            Operations('/');
         }
 
         private void Btn_mul_Click(object sender, RoutedEventArgs e)
         {
-
+            Operations('*');
         }
 
         private void Btn_minus_Click(object sender, RoutedEventArgs e)
         {
-
+            Operations('-');
         }
 
         private void Btn_plus_Click(object sender, RoutedEventArgs e)
         {
-
+            Operations('+');
         }
 
         private void Btn_eq_Click(object sender, RoutedEventArgs e)
