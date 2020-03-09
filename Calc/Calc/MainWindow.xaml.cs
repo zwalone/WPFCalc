@@ -21,7 +21,7 @@ namespace Calc
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Stack<double> num;
+        private Stack<double> num = new Stack<double>();
         private char operations = ' ';
         private string lenquage;
         private StringBuilder displayString;
@@ -51,26 +51,70 @@ namespace Calc
             tbx_dysplay.Text = displayString.ToString();
         }
 
-        private void Operations(char op)
+        private void Operations()
         {
+            double temp;
             if (num == null || num.Count <2)
             {
                 try
                 {
                     if(lenquage == "pl-PL")
                     {
-                        num.Push(Convert.ToDouble(displayString.ToString().Replace(',', '.')));
+                        temp = Double.Parse(displayString.ToString().Replace(',', '.'));
+                        num.Push(temp);
                     }
                     else
                     {
-                        num.Push(Convert.ToDouble(displayString.ToString()));
+                        num.Push(Double.Parse(displayString.ToString()));
                     }
-                    operations = op;
                 }
                 catch
                 {
-
+                    tbx_dysplay.Text = "Operations method wrong";
                 }
+                displayString.Clear();
+                displayString.Append("0");
+                tbx_dysplay.Text = displayString.ToString();
+            }
+            else
+            {
+                DoOperations();
+            }
+        }
+        
+        private void DoOperations()
+        {
+            if (num.Count == 2)
+            {
+                double result = 0;
+                double num1, num2;
+                num2 = num.Pop();
+                num1 = num.Pop();
+                num.Clear();
+                switch (operations)
+                {
+                    case '+':
+                        result = num1 + num2;
+                        break;
+                    case '-':
+                        result = num1 - num2;
+                        break;
+                    case '*':
+                        result = num1 * num2;
+                        break;
+                    case '/':
+                        if (num2 != 0)
+                        {
+                            result = num1 / num2;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                num.Push(result);
+                displayString.Clear();
+                displayString.Append(result.ToString());
+                tbx_dysplay.Text = displayString.ToString();
             }
         }
 
@@ -91,10 +135,6 @@ namespace Calc
             }
         }
 
-        private void ToNumbers()
-        {
-
-        }
 
         #region Buttons 0-9
         private void Btn_7_Click(object sender, RoutedEventArgs e)
@@ -199,27 +239,32 @@ namespace Calc
         #region Buttons operations
         private void Btn_div_Click(object sender, RoutedEventArgs e)
         {
-            Operations('/');
+            operations = '/';
+            Operations();
         }
 
         private void Btn_mul_Click(object sender, RoutedEventArgs e)
-        {
-            Operations('*');
+        { 
+            operations = '*';
+            Operations();
         }
 
         private void Btn_minus_Click(object sender, RoutedEventArgs e)
         {
-            Operations('-');
+            operations = '-';
+            Operations();
         }
 
         private void Btn_plus_Click(object sender, RoutedEventArgs e)
         {
-            Operations('+');
+            operations = '+';
+            Operations();
         }
 
         private void Btn_eq_Click(object sender, RoutedEventArgs e)
         {
-
+            Operations();
+            DoOperations();
         }
 
         #endregion
