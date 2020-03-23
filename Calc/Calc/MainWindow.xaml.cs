@@ -23,70 +23,42 @@ namespace Calc
     {
         private Stack<double> num = new Stack<double>();
         private char operations = ' ';
-        private string lenquage;
         private StringBuilder displayString;
+        bool signOp;
+        bool eq;
 
         public MainWindow()
         {
             InitializeComponent();
             Setup();
         }
-        //pl-PL
+ 
         private void Setup()
         {
-            CultureInfo ci =  CultureInfo.CurrentCulture;
-            lenquage = ci.Name;
-
-            //Change button dot 
-            if(lenquage == "pl-PL")
-            {
-                btn_dot.Content = ",";
-            }
-            else
-            {
-                btn_dot.Content = ".";
-            }
-
             displayString = new StringBuilder("0");
             tbx_dysplay.Text = displayString.ToString();
         }
 
-        private void Operations()
+        private void Operations(char c)
         {
-            double temp;
-            if (num == null || num.Count <2)
+            if (!signOp)
             {
-                try
+                if (Double.TryParse(displayString.ToString(), out double result))
                 {
-                    if(lenquage == "pl-PL")
-                    {
-                        temp = Double.Parse(displayString.ToString().Replace(',', '.'));
-                        num.Push(temp);
-                    }
-                    else
-                    {
-                        num.Push(Double.Parse(displayString.ToString()));
-                    }
+                    signOp = true;
+                    num.Push(result);
+                    DoOperations();
                 }
-                catch
-                {
-                    tbx_dysplay.Text = "Operations method wrong";
-                }
-                displayString.Clear();
-                displayString.Append("0");
-                tbx_dysplay.Text = displayString.ToString();
             }
-            else
-            {
-                DoOperations();
-            }
+            operations = c;
+            eq = false;
         }
         
         private void DoOperations()
         {
             if (num.Count == 2)
             {
-                double result = 0;
+                double result = 0.0;
                 double num1, num2;
                 num2 = num.Pop();
                 num1 = num.Pop();
@@ -107,19 +79,39 @@ namespace Calc
                         {
                             result = num1 / num2;
                         }
+                        else
+                        {
+                            tbx_dysplay.Text = "Nie dziel przez zero!";
+                            return;
+                        }
                         break;
                     default:
                         break;
                 }
+
                 num.Push(result);
                 displayString.Clear();
                 displayString.Append(result.ToString());
                 tbx_dysplay.Text = displayString.ToString();
+                displayString.Clear();
+                signOp = false;
             }
         }
 
         private void ChangeValue(string s)
         {
+            if (signOp)
+            {
+                displayString.Clear();
+                displayString.Append("0");
+                signOp = false;
+            }
+            if (eq)
+            {
+                num.Clear();
+                signOp = false;
+                eq = false;
+            }
             if (displayString.Length < 17)
             {
                 if (displayString.ToString() == "0")
@@ -131,6 +123,7 @@ namespace Calc
                 {
                     displayString.Append(s);
                 }
+                eq = false;
                 tbx_dysplay.Text = displayString.ToString();
             }
         }
@@ -207,6 +200,10 @@ namespace Calc
 
         private void Btn_Back_Click(object sender, RoutedEventArgs e)
         {
+            if (displayString.ToString() == "")
+            {
+                displayString.Append("0");
+            }
             if(displayString[0] == '-')
             {
                 if(displayString.Length == 2)
@@ -239,32 +236,29 @@ namespace Calc
         #region Buttons operations
         private void Btn_div_Click(object sender, RoutedEventArgs e)
         {
-            operations = '/';
-            Operations();
+            Operations('/');
         }
 
         private void Btn_mul_Click(object sender, RoutedEventArgs e)
         { 
-            operations = '*';
-            Operations();
+            Operations('*');
         }
 
         private void Btn_minus_Click(object sender, RoutedEventArgs e)
         {
-            operations = '-';
-            Operations();
+            Operations('-');
         }
 
         private void Btn_plus_Click(object sender, RoutedEventArgs e)
-        {
-            operations = '+';
-            Operations();
+        {   
+            Operations('+');
         }
 
         private void Btn_eq_Click(object sender, RoutedEventArgs e)
         {
-            Operations();
-            DoOperations();
+            Operations(' ');
+            eq = true;
+            signOp = true;
         }
 
         #endregion
@@ -276,11 +270,11 @@ namespace Calc
             {
 
             }
-            else if(displayString[0] != '-')
+            else if(!displayString.ToString().Contains('-'))
             {
                 displayString.Insert(0,'-');
             }
-            else if(displayString[0] == '-')
+            else if(displayString.ToString().Contains('-'))
             {
                 displayString.Remove(0, 1);
             }
@@ -289,23 +283,39 @@ namespace Calc
 
         private void Btn_dot_Click(object sender, RoutedEventArgs e)
         {
-            if (displayString.ToString().Contains(',') || displayString.ToString().Contains(','))
+            if (!displayString.ToString().Contains(","))
             {
-
-            }
-            else
-            {
-                // pl add ,
-                if(lenquage == "pl-PL")
-                {
-                    displayString.Append(',');
-                }
-                else
-                {
-                    displayString.Append('.');
-                }
+                displayString.Append(",");
             }
             tbx_dysplay.Text = displayString.ToString();
+        }
+        #endregion
+
+        #region Input Keys
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.NumPad1 || e.Key == Key.D1) ChangeValue("1");
+            else if (e.Key == Key.NumPad2 || e.Key == Key.D2) ChangeValue("2");
+            else if (e.Key == Key.NumPad3 || e.Key == Key.D3) ChangeValue("3");
+            else if (e.Key == Key.NumPad4 || e.Key == Key.D4) ChangeValue("4");
+            else if (e.Key == Key.NumPad5 || e.Key == Key.D5) ChangeValue("5");
+            else if (e.Key == Key.NumPad6 || e.Key == Key.D6) ChangeValue("6");
+            else if (e.Key == Key.NumPad7 || e.Key == Key.D7) ChangeValue("7");
+            else if (e.Key == Key.NumPad8 || e.Key == Key.D8) ChangeValue("8");
+            else if (e.Key == Key.NumPad9 || e.Key == Key.D9) ChangeValue("9");
+            else if (e.Key == Key.NumPad0 || e.Key == Key.D0) ChangeValue("0");
+            else if (e.Key == Key.Decimal) ChangeValue(",");
+           
+            if (e.Key == Key.Multiply) Operations('*');
+            else if (e.Key == Key.Divide) Operations('/');
+            else if (e.Key == Key.Add) Operations('+');
+            else if (e.Key == Key.Subtract) Operations('-');
+            if (e.Key == Key.Enter) {
+                Operations(' ');
+                signOp = true;
+                eq = true;
+            }
+           
         }
         #endregion
     }
